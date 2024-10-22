@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Model Prediction</title>
+    <style>
+        body {
+            background-color: #121212; /* Dark background */
+            font-family: 'Tahoma', sans-serif;
+            color: #ffffff; /* White text */
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #ff4d4d; /* Red color */
+            text-align: center;
+            background-color: #1e1e1e; /* Darker background for header */
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 2.8em;
+            letter-spacing: 1px;
+            margin: 20px auto 40px;
+            width: 90%;
+            max-width: 800px;
+        }
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: calc(100vh - 160px); /* Adjust height to account for header and footer */
+            margin-bottom: 40px;
+        }
+        #main {
+            width: 90%;
+            max-width: 600px;
+            background-color: #1e1e1e; /* Dark background for form */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+        input[type=text] {
+            width: calc(100% - 20px);
+            height: 40px;
+            margin-bottom: 15px;
+            border: 2px solid #ff4d4d; /* Red border */
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 1.1em;
+            background-color: #2b2b2b; /* Dark background */
+            color: #ffffff; /* White text */
+        }
+        input[type=text]:focus {
+            border: 2px solid #ff6666; /* Lighter red on focus */
+            outline: none;
+        }
+        input[type='radio'] {
+            accent-color: #ff4d4d; /* Red color for radio buttons */
+        }
+        fieldset {
+            border: 2px solid #ff4d4d; /* Red border */
+            border-radius: 8px;
+            background-color: #2b2b2b; /* Dark background */
+            margin-bottom: 15px;
+            padding: 10px;
+            color: #ffffff;
+        }
+        .button-5 {
+            background-color: #ff4d4d; /* Red color */
+            color: #ffffff; /* White text */
+            border: none;
+            border-radius: 6px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-5:hover {
+            background-color: #ff6666; /* Lighter red on hover */
+            transform: scale(1.05);
+        }
+        .button-5:active {
+            background-color: #cc0000; /* Darker red when active */
+        }
+        label {
+            font-family: 'Tahoma', sans-serif;
+            font-size: 1.2em;
+        }
+        legend {
+            font-weight: bold;
+            color: #ff4d4d; /* Red color */
+            font-size: 1.3em;
+        }
+        #result {
+            display: flex;
+            align-items: center;
+            background-color: #2b2b2b; /* Dark background */
+            padding: 15px;
+            color: #ffffff; /* White text */
+            border-radius: 8px;
+            margin-top: 30px;
+            font-size: 1.3em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            justify-content: center;
+        }
+        #answer {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: 'Tahoma', sans-serif;
+            font-weight: bold;
+        }
+        #answer.yes {
+            background-color: #ff4d4d; /* Red for 'Yes' */
+            color: #ffffff; /* White text */
+        }
+        #answer.no {
+            background-color: #4caf50; /* Green for 'No' */
+            color: #ffffff; /* White text */
+        }
+    </style>
+</head>
+<body>
+    <h1>Diabetes Prediction Logistic Regression Model</h1>
+    <div class="form-container">
+        <div id="main">
+            <form id="prediction-form" method="post" action="/predict">
+                {% csrf_token %}
+                
+                <div><input type="text" name="age" placeholder="Age" required></div>
+                <div><input type="text" name="hypertension" placeholder="Hypertension" required></div>
+                <div><input type="text" name="heart_disease" placeholder="Heart Disease" required></div>
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                    <fieldset style="flex: 1; min-width: 45%; margin-right: 5px;">
+                        <legend>Gender</legend>
+                        <label><input type="radio" name="gender" value="1" required> Male</label><br>
+                        <label><input type="radio" name="gender" value="2" required> Female</label><br>
+                        <label><input type="radio" name="gender" value="3" required> Other</label>
+                    </fieldset>
+                    <fieldset style="flex: 1; min-width: 45%; margin-left: 5px;">
+                        <legend>Smoking History</legend>
+                        <label><input type="radio" name="smoking_history" value="1" required> Never</label><br>
+                        <label><input type="radio" name="smoking_history" value="2" required> No Info</label><br>
+                        <label><input type="radio" name="smoking_history" value="3" required> Current</label><br>
+                        <label><input type="radio" name="smoking_history" value="4" required> Former</label><br>
+                        <label><input type="radio" name="smoking_history" value="5" required> Ever</label><br>
+                        <label><input type="radio" name="smoking_history" value="6" required> Not Current</label>
+                    </fieldset>
+                </div>
+                <div>
+                    <input type="text" name="bmi" placeholder="BMI" required>
+                    <input type="text" name="HbA1c_level" placeholder="HbA1c Level" required>
+                    <input type="text" name="blood_glucose_level" placeholder="Blood Glucose Level" required>
+                </div>
+                <button class="button-5" type="submit">Predict</button>
+            </form>
+        </div>
+    </div>
+    <div id="result">
+        <h3 style="padding-right: 20px;">Result:</h3>
+        {% if answer == 1 %}
+            <div id="answer" class="yes">Yes</div>
+        {% elif answer == 0 %}
+            <div id="answer" class="no">No</div>
+        {% endif %}
+    </div>
+</body>
+</html>
